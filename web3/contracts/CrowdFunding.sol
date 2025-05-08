@@ -68,7 +68,9 @@ contract CrowdFunding {
         uint256 donated = c.donatedAmount[msg.sender];
         require(donated > 0,                        "No funds to refund");
 
-        // зануляем до возврата, чтобы избежать re-entrancy
+        // сначала уменьшаем собранную сумму
+        c.amountCollected -= donated;
+        // зануляем донорский баланс
         c.donatedAmount[msg.sender] = 0;
         payable(msg.sender).transfer(donated);
 
